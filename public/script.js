@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
 function loadMenuItems() {
-  return fetch('https://tu-aplicacion-octopus.com.ar/api/menu') // Asegúrate de que la URL sea la correcta
+  return fetch('https://elpatio3-0.onrender.com//api/menu') // Asegúrate de que la URL sea la correcta
     .then(response => response.json())
     .then(data => {
       const container = document.querySelector('.container');
@@ -247,7 +247,7 @@ document.body.addEventListener('click', function (event) {
         };
 
         // Crear el nuevo elemento en el servidor
-        fetch('https://tu-aplicacion-octopus.com.ar/api/menu', {
+        fetch('https://elpatio3-0.onrender.com/api/menu', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
