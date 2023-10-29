@@ -101,6 +101,7 @@ background-color: var(--primary-color)!important;
 }
 
 .item-header {
+  flex-direction: column;
   display: flex;
   justify-content: space-between;
   align-items: baseline;

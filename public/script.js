@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
 function loadMenuItems() {
-  return fetch('https://elpatio3-0.onrender.com//api/menu') // Asegúrate de que la URL sea la correcta
+  return fetch('https://elpatio3-0.onrender.com/api/menu') // Asegúrate de que la URL sea la correcta
     .then(response => response.json())
     .then(data => {
       const container = document.querySelector('.container');
