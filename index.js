@@ -57,18 +57,19 @@ app.post('/api/menu', (req, res) => {
 
   
   
-  app.get('/api/menu', (req, res) => {
-    const query = 'SELECT * FROM menu_items';
-    
-    db.all(query, [], (err, rows) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      res.json({ data: rows });
-    });
-  });
+app.get('/api/menu', (req, res) => {
+  const query = 'SELECT * FROM menu_items';
   
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    console.log("Datos devueltos:", rows);  // Añadir esto para depurar
+    res.json({ data: rows });
+  });
+});
+
   
   app.put('/api/menu/:id', (req, res) => {
     console.log("Solicitud PUT recibida para ID:", req.params.id);  // Nuevo log

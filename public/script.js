@@ -106,11 +106,15 @@ function loadMenuItems() {
 
 
 function createMenuItem(item) {
+  console.log("URL de la imagen:", item.img_url);  // Mueve esta línea aquí
+  const imageUrl = item.img_url || ''; // Utiliza una cadena vacía si img_url es null
+
   const newItem = document.createElement('div');
   newItem.className = 'menu-item';
   newItem.innerHTML = `
     <div class="item-header">
-    <img src="${item.img_url}" alt="${item.nombre}" />
+    <img src="${imageUrl}" alt="${item.nombre}" onerror="this.onerror=null; this.src='';" />
+
 
       <h3 class="item-title">${item.nombre}</h3>
       <span class="item-price">$${item.precio}</span>
@@ -121,6 +125,7 @@ function createMenuItem(item) {
   newItem.dataset.id = item.id;
   return newItem;
 }
+
 
 
 
@@ -156,7 +161,8 @@ document.body.addEventListener('click', function (event) {
         nombre: document.getElementById('swal-input1').value,
         precio: document.getElementById('swal-input2').value,
         descripcion: document.getElementById('swal-input4').value,
-        tipo: document.getElementById('swal-input3').value
+        tipo: document.getElementById('swal-input3').value,
+        img_url: document.getElementById('swal-img-url').value  
       };
 
 
@@ -177,7 +183,8 @@ document.body.addEventListener('click', function (event) {
               itemElement.querySelector('.item-title').textContent = updatedData.nombre;
               itemElement.querySelector('.item-price').textContent = `$${updatedData.precio}`;
               itemElement.querySelector('.item-description').textContent = updatedData.descripcion;
-            
+              itemElement.querySelector('img').src = updatedData.img_url;
+
               const oldMenuSection = event.target.closest('.menu-section');
               const newMenuSection = document.querySelector(`.menu-section[data-type="${updatedData.tipo}"]`);
               if (oldMenuSection !== newMenuSection) {
@@ -234,7 +241,9 @@ document.body.addEventListener('click', function (event) {
           nombre: document.getElementById('swal-input1').value,
           precio: document.getElementById('swal-input2').value,
           descripcion: document.getElementById('swal-input4').value,
-          tipo: document.getElementById('swal-input3').value
+          tipo: document.getElementById('swal-input3').value,
+          img_url: document.getElementById('swal-img-url').value  
+
         }
       }
     }).then((result) => {
@@ -243,7 +252,9 @@ document.body.addEventListener('click', function (event) {
           nombre: document.getElementById('swal-input1').value,
           precio: document.getElementById('swal-input2').value,
           descripcion: document.getElementById('swal-input4').value,
-          tipo: document.getElementById('swal-input3').value
+          tipo: document.getElementById('swal-input3').value,
+          img_url: document.getElementById('swal-img-url').value  
+
         };
 
         // Crear el nuevo elemento en el servidor
