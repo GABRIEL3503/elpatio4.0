@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function loadMenuItems() {
-    return fetch('http://localhost:3001/api/menu') // Asegúrate de que la URL sea la correcta
+    return fetch('https://tu-aplicacion-octopus.com.ar/api/menu') // Asegúrate de que la URL sea la correcta
       .then(response => response.json())
       .then(data => {
         const container = document.querySelector('.container');
@@ -275,7 +275,7 @@ if (updatedData.img_url) { // Si hay una nueva URL
         };
 
         // Crear el nuevo elemento en el servidor
-        fetch('http://localhost:3001/api/menu', {
+        fetch('https://tu-aplicacion-octopus.com.ar/api/menu', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
