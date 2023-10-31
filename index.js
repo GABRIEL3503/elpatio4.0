@@ -71,24 +71,25 @@ app.get('/api/menu', (req, res) => {
 });
 
   
-  app.put('/api/menu/:id', (req, res) => {
-    console.log("Solicitud PUT recibida para ID:", req.params.id);  // Nuevo log
-    console.log("Datos recibidos en el cuerpo de la solicitud:", req.body);  // Nuevo log
-  
-    const { id } = req.params;
-    const { nombre, precio, descripcion, tipo } = req.body;
-    const query = 'UPDATE menu_items SET nombre = ?, precio = ?, descripcion = ?, tipo = ? WHERE id = ?';
-    
-    db.run(query, [nombre, precio, descripcion, tipo, id], function(err) {
-      if (err) {
-        console.log("Error al ejecutar la consulta:", err.message);  // Nuevo log
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      console.log("Número de cambios realizados:", this.changes);  // Nuevo log
-      res.json({ changes: this.changes });
-    });
+app.put('/api/menu/:id', (req, res) => {
+  console.log("Solicitud PUT recibida para ID:", req.params.id);
+  console.log("Datos recibidos en el cuerpo de la solicitud:", req.body);
+
+  const { id } = req.params;
+  const { nombre, precio, descripcion, tipo, img_url } = req.body; // Incluir img_url aquí
+  const query = 'UPDATE menu_items SET nombre = ?, precio = ?, descripcion = ?, tipo = ?, img_url = ? WHERE id = ?'; // Y aquí
+
+  db.run(query, [nombre, precio, descripcion, tipo, img_url, id], function(err) { // Y también aquí
+    if (err) {
+      console.log("Error al ejecutar la consulta:", err.message);
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    console.log("Número de cambios realizados:", this.changes);
+    res.json({ changes: this.changes });
   });
+});
+
   
   app.delete('/api/menu/:id', (req, res) => {
     const { id } = req.params;
