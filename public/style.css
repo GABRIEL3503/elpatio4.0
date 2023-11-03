@@ -50,7 +50,7 @@ body {
   font-family: 'Roboto', sans-serif;
   display: flex;
   color: var(--white-color)!important;
-  font-size: 45px;
+  font-size: 48px;
   margin-bottom: 10px;
   justify-content: center;
 }
@@ -369,3 +369,15 @@ p{
   .item-header img {
     width: 75vw;
   }
+
+
+  h2 {
+    font-size: 24px; /* Ejemplo de tamaño de fuente */
+    line-height: 1.2; /* Ajusta la altura de línea si es necesario */
+  }
+  
+  h2 span {
+    border-bottom: 1px solid #fff;
+    padding-bottom: 3px; /* Ajusta el espacio entre el texto y la línea */
+  }
+  

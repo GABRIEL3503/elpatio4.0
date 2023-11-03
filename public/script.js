@@ -76,9 +76,18 @@ document.addEventListener("DOMContentLoaded", function () {
             if (currentType !== item.tipo) {
               const sectionTitle = document.createElement('h2');
               sectionTitle.className = 'section-title';
-              sectionTitle.textContent = item.tipo.toUpperCase();
+              
+              // Crear el span y añadir el texto a este span
+              const titleText = document.createElement('span');
+              titleText.textContent = item.tipo.toUpperCase();
+              
+              // Añadir el span al h2
+              sectionTitle.appendChild(titleText);
+              
+              // Finalmente, añadir el h2 al menú de la sección
               menuSection.appendChild(sectionTitle);
-
+            
+            
               // Si el tipo de ítem es "Sandwiches", añadir un subtítulo adicional
               if (item.tipo.toLowerCase() === 'sandwiches') {
                 const subtitle = document.createElement('h3');
