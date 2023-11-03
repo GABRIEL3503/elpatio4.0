@@ -364,3 +364,8 @@ p{
   .item-containerp{
     display: flex;
   }
+
+
+  .item-header img {
+    width: 75vw;
+  }
