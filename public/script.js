@@ -117,10 +117,10 @@ document.addEventListener("DOMContentLoaded", function () {
     newItem.innerHTML = `
     <div class="item-header">
       ${imgTag}  <!-- Aquí va la etiqueta de la imagen si existe -->
-      <h3 class="item-title">${item.nombre}</h3>
-      <span class="item-price">$${item.precio}</span>
+       <h3 class="item-title">${item.nombre}  <span class="item-price">$${item.precio}</span></h3>
+     
     </div>
-    <p class="item-description">${item.descripcion}</p>
+    <span class="item-containerp" ><p class="item-description">${item.descripcion}</p> </span>
     <button class="edit-button auth-required">Editar</button>
   `;
     newItem.dataset.id = item.id;

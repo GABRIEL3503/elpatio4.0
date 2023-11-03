@@ -45,11 +45,12 @@ body {
 }
 
 .section-title {
-  letter-spacing: 3px;
-  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  letter-spacing: 5px;
+  font-family: 'Roboto', sans-serif;
   display: flex;
   color: var(--white-color)!important;
-  font-size: 53px;
+  font-size: 45px;
   margin-bottom: 10px;
   justify-content: center;
 }
@@ -67,8 +68,8 @@ body {
 
 
 .item-description {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 31px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 35px;
   margin: 5px 0;
 }
 
@@ -92,6 +93,7 @@ background-color: var(--primary-color)!important;
 /* ... Otros estilos ... */
 
 .menu-item {
+  align-items: center;
   margin-bottom: 38px;
   /* border: 1px solid #ccc; */
   padding: 10px;
@@ -109,9 +111,12 @@ background-color: var(--primary-color)!important;
 }
 
 .item-title {
-  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+letter-spacing: 4px;
+  margin-top: 31px;
+  font-weight: 600;
  color: var(--white-color)!important;
-  margin: 6px;
+  /* margin: 6px; */
   font-size: 42px;
 }
 
@@ -127,15 +132,18 @@ background-color: var(--primary-color)!important;
 }
 
 .item-description {
-  margin: 5px 0;
+  margin: 0px 80px;
 }
 
 .item-price {
+  letter-spacing: -0.5px;
+  margin-left: 286px;
   color: var(--white-color)!important;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 34px;
-  margin: 6px;
-  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+
+  font-size: 44px;
+
+  font-weight: 400;
 }
 
 /* ... Otros estilos ... */
@@ -342,3 +350,17 @@ p{
   color: var(--white-color)!important;
   font-family: 'Montserrat', sans-serif;;
 }
+
+.container-sub{
+  display: flex;
+}
+
+
+#menufoot{
+  display: flex;
+  font-size: 13px!important; 
+  padding: 2px!important; }
+
+  .item-containerp{
+    display: flex;
+  }
