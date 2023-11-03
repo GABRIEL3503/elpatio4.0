@@ -230,6 +230,10 @@ background-color: var(--oscuro-color)!important;
   align-content: center;
 }
 
+.footer-left .logo{
+  margin-bottom: -13px;
+}
+
 .logo {
   width: 50px;
   height: auto;
@@ -243,12 +247,14 @@ background-color: var(--oscuro-color)!important;
 }
 
 .footer-right {
+  align-items: center;
   letter-spacing: 1px;
   font-family: 'Open Sans', sans-serif;
   display: flex;
   width: 50%;
 }
 .footer-right img {
+  height: 117px;
   width: 100px;
 }
 .footer-right h2 {
@@ -262,6 +268,7 @@ background-color: var(--oscuro-color)!important;
 }
 
 .footer-left img {
+  margin-right: 12px;
   width: 308px;
 }
 
