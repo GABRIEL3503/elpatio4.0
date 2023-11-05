@@ -109,3 +109,46 @@ app.put('/api/menu/:id', (req, res) => {
   app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
   });
+
+
+  // Ruta POST para crear o actualizar el anuncio
+app.post('/api/announcements', (req, res) => {
+  const { image_url, text, state } = req.body;
+  
+  // Verificar si existe un anuncio para actualizarlo o crear uno nuevo
+  const checkAnnouncementExists = 'SELECT id FROM announcements WHERE id = 1';
+  const createOrUpdateAnnouncement = row => 
+    row
+      ? 'UPDATE announcements SET image_url = ?, text = ?, state = ? WHERE id = 1'
+      : 'INSERT INTO announcements (image_url, text, state) VALUES (?, ?, ?)';
+
+  db.get(checkAnnouncementExists, [], (err, row) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    db.run(createOrUpdateAnnouncement(row), [image_url, text, state], function(err) {
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+
+      res.json({ success: true, id: this.lastID });
+    });
+  });
+});
+
+// Ruta GET para obtener el anuncio activo
+app.get('/api/announcements', (req, res) => {
+  const getActiveAnnouncement = 'SELECT * FROM announcements WHERE state = 1 ORDER BY id DESC LIMIT 1';
+
+  db.get(getActiveAnnouncement, [], (err, row) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    res.json(row ? { success: true, announcement: row } : { success: false, message: 'No active announcement found' });
+  });
+});

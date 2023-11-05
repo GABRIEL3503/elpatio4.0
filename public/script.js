@@ -317,6 +317,70 @@ if (updatedData.img_url) { // Si hay una nueva URL
       }
     });
   });
+  // Añadir un evento click al botón "Crear Anuncio"
+  const createAnnouncementButton = document.getElementById('create-announcement-button');
+  if (createAnnouncementButton) {
+    createAnnouncementButton.addEventListener('click', function () {
+      // Abre el modal de SweetAlert2 para crear el anuncio
+      Swal.fire({
+        title: 'Crear Anuncio',
+        html: `
+          <input id="swal-image-url" class="swal2-input" placeholder="URL de la imagen">
+          <input id="swal-text" class="swal2-input" placeholder="Texto del anuncio">
+         <span class="check">  <input type="checkbox" id="swal-state" class="swal2-checkbox"> Activo</span>
+        `,
+        focusConfirm: false,
+        preConfirm: () => {
+          return {
+            image_url: document.getElementById('swal-image-url').value,
+            text: document.getElementById('swal-text').value,
+            state: document.getElementById('swal-state').checked
+          };
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Enviar los datos del anuncio al servidor
+          fetch('/api/announcements', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(result.value)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Anuncio creado o actualizado correctamente
+              console.log('Anuncio creado/actualizado con ID:', data.id);
+            } else {
+              // Manejo de errores
+              console.log('Error al crear/actualizar el anuncio:', data.error);
+            }
+          });
+        }
+      });
+    });
+  }
+  function loadAndShowActiveAnnouncement() {
+    fetch('/api/announcements')
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.announcement && data.announcement.state) {
+          // Mostrar el anuncio con SweetAlert2
+          Swal.fire({
+            title: data.announcement.text,
+            imageUrl: data.announcement.image_url,
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: 'Imagen del anuncio',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+  }
+
+  // Cargar y mostrar el anuncio activo al iniciar la aplicación
+  loadAndShowActiveAnnouncement();
 });
 // Función para cerrar la sesión
 function simpleLogout() {
