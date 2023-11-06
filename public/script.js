@@ -125,8 +125,13 @@ document.addEventListener("DOMContentLoaded", function () {
     newItem.className = 'menu-item';
     newItem.innerHTML = `
     <div class="item-header">
-      ${imgTag}  <!-- Aquí va la etiqueta de la imagen si existe -->
-       <h3 class="item-title">${item.nombre}  <span class="item-price">$${item.precio}</span></h3>
+    ${imgTag}  <!-- Aquí va la etiqueta de la imagen si existe -->
+  <h3 class="item-title">${item.nombre}</h3>
+  <span class="item-price">$${item.precio}</span>
+    
+  </div>
+  
+
      
     </div>
     <span class="item-containerp" ><p class="item-description">${item.descripcion}</p> </span>
@@ -145,7 +150,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const itemElement = event.target.closest('.menu-item');
       const itemTitle = itemElement.querySelector('.item-title').textContent;
       const itemPrice = itemElement.querySelector('.item-price').textContent.substring(1); // Eliminar el símbolo de dólar
-      const itemDescription = itemElement.querySelector('.item-description').textContent;
+     
+      console.log('Debug - Título del elemento:', itemTitle);
+      console.log('Debug - Precio del elemento:', itemPrice); const itemDescription = itemElement.querySelector('.item-description').textContent;
       const itemType = event.target.closest('.menu-section').getAttribute('data-type');
       const imgElement = itemElement.querySelector('img');
       const itemImgUrl = imgElement ? imgElement.src : '';

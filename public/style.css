@@ -374,6 +374,7 @@ p{
 
 
   .item-header img {
+    margin-bottom: 27px;
     width: 75vw;
   }
 
@@ -419,3 +420,23 @@ p{
   .swal2-confirm {
     background-color: var(--primary-color)!important;
   }
+
+  .title-price-container {
+    display: flex;        /* Usa Flexbox para alinear los elementos */
+    align-items: center;  /* Alinea los elementos verticalmente en el centro */
+    justify-content: space-between; /* Separa el título y el precio */
+    width: 100%;          /* Ocupa el ancho completo del contenedor padre */
+  }
+  
+  .item-title, .item-price {
+    margin: 0; /* Elimina márgenes por defecto para h3 y span */
+  }
+  
+  .item-title {
+    flex-grow: 1; /* Permite que el título ocupe todo el espacio disponible */
+  }
+  
+  .item-price {
+    white-space: nowrap; /* Asegura que el precio no se divida en múltiples líneas */
+  }
+  
