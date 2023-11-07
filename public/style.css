@@ -403,6 +403,7 @@ p{
     margin: 10px; /* Agrega un poco de margen alrededor para evitar que se vea apretado */
   }
   .swal2-image {
+    margin-top: 1em!important;
     width: 98%!important;
     height: auto!important;
     object-fit: contain;
