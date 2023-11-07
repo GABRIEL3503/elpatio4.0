@@ -361,8 +361,9 @@ p{
 
 
 #menufoot{
+  align-items: center;
   display: flex;
-  font-size: 13px!important; 
+  font-size: 17px!important; 
   padding: 2px!important; }
 
   .item-containerp{
@@ -442,4 +443,9 @@ p{
   .special-drink-title{
     color: #d9b384
     !important;
+  }
+  #noStyle{
+    font-size: 22px;
+    padding: 12px;
+
   }
