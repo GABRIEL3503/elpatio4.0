@@ -74,6 +74,7 @@ body {
 }
 
 .item-price {
+  margin-top: -46px;
   align-self: flex-end;
   font-weight: bold;
 }
@@ -436,7 +437,4 @@ p{
     flex-grow: 1; /* Permite que el título ocupe todo el espacio disponible */
   }
   
-  .item-price {
-    white-space: nowrap; /* Asegura que el precio no se divida en múltiples líneas */
-  }
-  
+ 
