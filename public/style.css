@@ -336,7 +336,10 @@ display: flex;}
 }
 
 
-
+.swal2-confirm {
+  background-color: #68e066!important;
+  
+}
 
 p{
 
@@ -416,7 +419,7 @@ p{
   font-family: 'Roboto', sans-serif;
   }
   .swal2-confirm {
-    background-color:#d9b384!important;
+    background-color: var(--primary-color)!important;
   }
 
   .title-price-container {
