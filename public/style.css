@@ -292,6 +292,7 @@ button{
 }
 
 .swal2-title{
+  margin-top: -46px;
   font-size: 54px!important;
 }.swal2-input{
   width: 600px!important;
@@ -402,10 +403,10 @@ p{
     margin: 10px; /* Agrega un poco de margen alrededor para evitar que se vea apretado */
   }
   .swal2-image {
-    width: 55vw!important;          /* Establece el ancho de la imagen al 70% del ancho de la ventana */
-    height: auto!important;         /* Asegura que la altura de la imagen sea automática y proporcional al ancho */
-    object-fit: contain;  /* Asegura que la imagen se escale correctamente dentro del contenedor sin estirarse */
-    object-position: center; /* Centra la imagen dentro de su contenedor */
+    width: 98%!important;
+    height: auto!important;
+    object-fit: contain;
+    object-position: center;
   }
   .swal2-popup{
     background-color: #F8F8F8;
