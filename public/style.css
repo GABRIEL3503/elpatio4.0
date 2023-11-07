@@ -70,7 +70,7 @@ body {
 .item-description {
   font-family: 'Roboto', sans-serif;
   font-size: 35px;
-  margin: 5px 0;
+  
 }
 
 
@@ -367,6 +367,7 @@ p{
   padding: 2px!important; }
 
   .item-containerp{
+    width: 100%;
     display: flex;
   }
 
