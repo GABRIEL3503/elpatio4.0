@@ -73,11 +73,7 @@ body {
   margin: 5px 0;
 }
 
-.item-price {
-  margin-top: -46px;
-  align-self: flex-end;
-  font-weight: bold;
-}
+
 
 h3,
 p {
@@ -437,4 +433,8 @@ p{
     flex-grow: 1; /* Permite que el título ocupe todo el espacio disponible */
   }
   
- 
+  .item-price {
+    margin-top: -52px;
+    align-self: flex-end;
+    font-weight: bold;
+  }
