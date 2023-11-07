@@ -64,54 +64,55 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(data => {
         const container = document.querySelector('.container');
         let currentType = null;
-
+  
         data.data.forEach(item => {
           let menuSection = document.querySelector(`.menu-section[data-type="${item.tipo}"]`);
-
+  
           if (!menuSection) {
             menuSection = document.createElement('div');
             menuSection.className = 'menu-section';
             menuSection.setAttribute('data-type', item.tipo);
-
+  
+            const itemTypeLower = item.tipo.toLowerCase();
+            const isSpecialDrink = itemTypeLower === 'cervezas' || itemTypeLower.includes('tipos de gin');
+            const sectionClass = isSpecialDrink ? 'special-drink-title' : '';
+  
             if (currentType !== item.tipo) {
               const sectionTitle = document.createElement('h2');
-              sectionTitle.className = 'section-title';
-              
+              sectionTitle.className = `section-title ${sectionClass}`.trim();
+  
               // Crear el span y añadir el texto a este span
               const titleText = document.createElement('span');
               titleText.textContent = item.tipo.toUpperCase();
-              
+  
               // Añadir el span al h2
               sectionTitle.appendChild(titleText);
-              
+  
               // Finalmente, añadir el h2 al menú de la sección
               menuSection.appendChild(sectionTitle);
-            
-            
+  
               // Si el tipo de ítem es "Sandwiches", añadir un subtítulo adicional
-              if (item.tipo.toLowerCase() === 'sandwiches') {
+              if (itemTypeLower === 'sandwiches') {
                 const subtitle = document.createElement('h3');
                 subtitle.textContent = 'TODOS ACOMPAÑADOS CON PAPAS';
                 subtitle.id = 'sandwiches-subtitle';  // O puedes usar className en lugar de id si prefieres
                 menuSection.appendChild(subtitle);
               }
-
+  
               currentType = item.tipo;
             }
-
+  
             container.appendChild(menuSection);
           }
-
+  
           const newItem = createMenuItem(item);
           menuSection.appendChild(newItem);
         });
-
+  
         checkAuthentication();
-
       });
-
-
   }
+  
 
 
   function createMenuItem(item) {
