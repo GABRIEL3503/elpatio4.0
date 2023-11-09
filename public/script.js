@@ -335,6 +335,7 @@ if (updatedData.img_url) { // Si hay una nueva URL
         html: `
           <input id="swal-image-url" class="swal2-input" placeholder="URL de la imagen">
           <input id="swal-text" class="swal2-input" placeholder="Texto del anuncio">
+          <input id="swal-paragraph" class="swal2-input" placeholder="Párrafo del anuncio"> 
          <span class="check">  <input type="checkbox" id="swal-state" class="swal2-checkbox"> Activo</span>
         `,
         focusConfirm: false,
@@ -342,6 +343,7 @@ if (updatedData.img_url) { // Si hay una nueva URL
           return {
             image_url: document.getElementById('swal-image-url').value,
             text: document.getElementById('swal-text').value,
+            paragraph: document.getElementById('swal-paragraph').value,
             state: document.getElementById('swal-state').checked
           };
         }
@@ -377,6 +379,7 @@ if (updatedData.img_url) { // Si hay una nueva URL
           // Mostrar el anuncio con SweetAlert2
           Swal.fire({
             title: data.announcement.text,
+            html: `<p>${data.announcement.paragraph}</p>`, // Añade el párrafo del anuncio aquí
             imageUrl: data.announcement.image_url,
             imageWidth: 400,
             imageHeight: 200,

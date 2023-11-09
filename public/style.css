@@ -453,3 +453,11 @@ p{
     padding: 12px;
 text-decoration: none;
   }
+
+  .swal2-html-container p{
+    color: var(--primary-color)!important;
+    font-size: 26px;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 20px;
+    z-index: 999;
+  }

@@ -113,14 +113,14 @@ app.put('/api/menu/:id', (req, res) => {
 
   // Ruta POST para crear o actualizar el anuncio
 app.post('/api/announcements', (req, res) => {
-  const { image_url, text, state } = req.body;
+  const { image_url, text, paragraph, state } = req.body;
   
   // Verificar si existe un anuncio para actualizarlo o crear uno nuevo
   const checkAnnouncementExists = 'SELECT id FROM announcements WHERE id = 1';
   const createOrUpdateAnnouncement = row => 
     row
-      ? 'UPDATE announcements SET image_url = ?, text = ?, state = ? WHERE id = 1'
-      : 'INSERT INTO announcements (image_url, text, state) VALUES (?, ?, ?)';
+      ? 'UPDATE announcements SET image_url = ?, text = ?,  paragraph = ?, state = ? WHERE id = 1'
+      : 'INSERT INTO announcements (image_url, text, paragraph, state) VALUES (?, ?, ?)';
 
   db.get(checkAnnouncementExists, [], (err, row) => {
     if (err) {
@@ -128,7 +128,7 @@ app.post('/api/announcements', (req, res) => {
       return;
     }
 
-    db.run(createOrUpdateAnnouncement(row), [image_url, text, state], function(err) {
+    db.run(createOrUpdateAnnouncement(row), [image_url, text,  paragraph,  state], function(err) {
       if (err) {
         res.status(500).json({ error: err.message });
         return;
