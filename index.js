@@ -13,6 +13,9 @@ app.use(express.static('public'));
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+
+let menuVersion = 0; // O usa un timestamp inicial
+
 // Hardcoded user for demonstration purposes
 const hardcodedUser = {
   username: "admin",
@@ -51,6 +54,8 @@ app.post('/api/menu', (req, res) => {
         res.status(500).json({ error: err.message });
         return;
       }
+      menuVersion++; // Incrementa la versión del menú
+
       res.json({ id: this.lastID });
     });
 });
@@ -85,6 +90,8 @@ app.put('/api/menu/:id', (req, res) => {
       res.status(500).json({ error: err.message });
       return;
     }
+    menuVersion++; // Incrementa la versión del menú
+
     console.log("Número de cambios realizados:", this.changes);
     res.json({ changes: this.changes });
   });
@@ -100,6 +107,8 @@ app.put('/api/menu/:id', (req, res) => {
         res.status(500).json({ error: err.message });
         return;
       }
+      menuVersion++; // Incrementa la versión del menú
+
       res.json({ deleted: this.changes });
     });
   });
@@ -151,4 +160,9 @@ app.get('/api/announcements', (req, res) => {
 
     res.json(row ? { success: true, announcement: row } : { success: false, message: 'No active announcement found' });
   });
+});
+
+
+app.get('/api/menuVersion', (req, res) => {
+    res.json({ version: menuVersion });
 });

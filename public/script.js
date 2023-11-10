@@ -59,60 +59,79 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function loadMenuItems() {
-    return fetch('https://tu-aplicacion-octopus.com.ar/api/menu') // Asegúrate de que la URL sea la correcta
+    const localVersion = localStorage.getItem('menuVersion');
+  
+    return fetch('https://tu-aplicacion-octopus.com.ar/api/menuVersion')
+      .then(response => response.json())
+      .then(serverVersionData => {
+        const serverVersion = serverVersionData.version;
+  
+        if (localVersion !== serverVersion) {
+          // Si la versión del servidor es diferente, obtén los datos del menú desde el servidor
+          return fetchMenuDataFromServer();
+        } else {
+          // Si no, usa los datos almacenados localmente
+          const menuData = JSON.parse(localStorage.getItem('menuData'));
+          renderMenuItems(menuData);
+        }
+      }); // Cierre de then() para fetch('/api/menuVersion')
+} // Cierre de loadMenuItems()
+
+function fetchMenuDataFromServer() {
+    return fetch('https://tu-aplicacion-octopus.com.ar/api/menu')
       .then(response => response.json())
       .then(data => {
-        const container = document.querySelector('.container');
-        let currentType = null;
-  
-        data.data.forEach(item => {
-          let menuSection = document.querySelector(`.menu-section[data-type="${item.tipo}"]`);
-  
-          if (!menuSection) {
-            menuSection = document.createElement('div');
-            menuSection.className = 'menu-section';
-            menuSection.setAttribute('data-type', item.tipo);
-  
-            const itemTypeLower = item.tipo.toLowerCase();
-            const isSpecialDrink = itemTypeLower === 'cervezas' || itemTypeLower.includes('tipos de gin');
-            const sectionClass = isSpecialDrink ? 'special-drink-title' : '';
-  
-            if (currentType !== item.tipo) {
-              const sectionTitle = document.createElement('h2');
-              sectionTitle.className = `section-title ${sectionClass}`.trim();
-  
-              // Crear el span y añadir el texto a este span
-              const titleText = document.createElement('span');
-              titleText.textContent = item.tipo.toUpperCase();
-  
-              // Añadir el span al h2
-              sectionTitle.appendChild(titleText);
-  
-              // Finalmente, añadir el h2 al menú de la sección
-              menuSection.appendChild(sectionTitle);
-  
-              // Si el tipo de ítem es "Sandwiches", añadir un subtítulo adicional
-              if (itemTypeLower === 'sandwiches') {
-                const subtitle = document.createElement('h3');
-                subtitle.textContent = 'TODOS ACOMPAÑADOS CON PAPAS';
-                subtitle.id = 'sandwiches-subtitle';  // O puedes usar className en lugar de id si prefieres
-                menuSection.appendChild(subtitle);
-              }
-  
-              currentType = item.tipo;
-            }
-  
-            container.appendChild(menuSection);
+        localStorage.setItem('menuData', JSON.stringify(data.data));
+        localStorage.setItem('menuVersion', data.version); // Asume que el servidor envía una 'versión'
+        renderMenuItems(data.data);
+      }); // Cierre de then() para fetch('/api/menu')
+} // Cierre de fetchMenuDataFromServer()
+
+function renderMenuItems(menuData) {
+    const container = document.querySelector('.container');
+    let currentType = null;
+
+    menuData.forEach(item => {
+      let menuSection = document.querySelector(`.menu-section[data-type="${item.tipo}"]`);
+
+      if (!menuSection) {
+        menuSection = document.createElement('div');
+        menuSection.className = 'menu-section';
+        menuSection.setAttribute('data-type', item.tipo);
+
+        const itemTypeLower = item.tipo.toLowerCase();
+        const isSpecialDrink = itemTypeLower === 'cervezas' || itemTypeLower.includes('tipos de gin');
+        const sectionClass = isSpecialDrink ? 'special-drink-title' : '';
+
+        if (currentType !== item.tipo) {
+          const sectionTitle = document.createElement('h2');
+          sectionTitle.className = `section-title ${sectionClass}`.trim();
+
+          const titleText = document.createElement('span');
+          titleText.textContent = item.tipo.toUpperCase();
+          sectionTitle.appendChild(titleText);
+          menuSection.appendChild(sectionTitle);
+
+          if (itemTypeLower === 'sandwiches') {
+            const subtitle = document.createElement('h3');
+            subtitle.textContent = 'TODOS ACOMPAÑADOS CON PAPAS';
+            subtitle.id = 'sandwiches-subtitle';
+            menuSection.appendChild(subtitle);
           }
-  
-          const newItem = createMenuItem(item);
-          menuSection.appendChild(newItem);
-        });
-  
-        checkAuthentication();
-      });
-  }
-  
+
+          currentType = item.tipo;
+        } // Cierre del if (!menuSection)
+
+        container.appendChild(menuSection);
+      } // Cierre del if (!menuSection)
+
+      const newItem = createMenuItem(item);
+      menuSection.appendChild(newItem);
+    }); // Cierre de forEach
+
+    checkAuthentication();
+} // Cierre de renderMenuItems()
+
 
 
   function createMenuItem(item) {
@@ -140,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
   `;
     newItem.dataset.id = item.id;
     return newItem;
-}
+  }
 
 
 
@@ -151,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const itemElement = event.target.closest('.menu-item');
       const itemTitle = itemElement.querySelector('.item-title').textContent;
       const itemPrice = itemElement.querySelector('.item-price').textContent.substring(1); // Eliminar el símbolo de dólar
-     
+
       console.log('Debug - Título del elemento:', itemTitle);
       console.log('Debug - Precio del elemento:', itemPrice); const itemDescription = itemElement.querySelector('.item-description').textContent;
       const itemType = event.target.closest('.menu-section').getAttribute('data-type');
@@ -205,25 +224,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 itemElement.querySelector('.item-description').textContent = updatedData.descripcion;
 
 
-               let imgElement = itemElement.querySelector('img');
-if (updatedData.img_url) { // Si hay una nueva URL
-  if (imgElement) {
-    imgElement.src = updatedData.img_url;
-  } else {
-    imgElement = document.createElement('img');
-    imgElement.src = updatedData.img_url;
-    imgElement.alt = updatedData.nombre;
-    itemElement.querySelector('.item-header').appendChild(imgElement);
-  }
-} else if (imgElement) { // Si la URL está vacía y había una imagen
-  imgElement.remove();
-}
+                let imgElement = itemElement.querySelector('img');
+                if (updatedData.img_url) { // Si hay una nueva URL
+                  if (imgElement) {
+                    imgElement.src = updatedData.img_url;
+                  } else {
+                    imgElement = document.createElement('img');
+                    imgElement.src = updatedData.img_url;
+                    imgElement.alt = updatedData.nombre;
+                    itemElement.querySelector('.item-header').appendChild(imgElement);
+                  }
+                } else if (imgElement) { // Si la URL está vacía y había una imagen
+                  imgElement.remove();
+                }
 
-    const oldMenuSection = event.target.closest('.menu-section');
-    const newMenuSection = document.querySelector(`.menu-section[data-type="${updatedData.tipo}"]`);
-    if (oldMenuSection !== newMenuSection) {
-      oldMenuSection.removeChild(itemElement);
-      newMenuSection.appendChild(itemElement);
+                const oldMenuSection = event.target.closest('.menu-section');
+                const newMenuSection = document.querySelector(`.menu-section[data-type="${updatedData.tipo}"]`);
+                if (oldMenuSection !== newMenuSection) {
+                  oldMenuSection.removeChild(itemElement);
+                  newMenuSection.appendChild(itemElement);
                 }
               }
             });
@@ -357,16 +376,16 @@ if (updatedData.img_url) { // Si hay una nueva URL
             },
             body: JSON.stringify(result.value)
           })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              // Anuncio creado o actualizado correctamente
-              console.log('Anuncio creado/actualizado con ID:', data.id);
-            } else {
-              // Manejo de errores
-              console.log('Error al crear/actualizar el anuncio:', data.error);
-            }
-          });
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                // Anuncio creado o actualizado correctamente
+                console.log('Anuncio creado/actualizado con ID:', data.id);
+              } else {
+                // Manejo de errores
+                console.log('Error al crear/actualizar el anuncio:', data.error);
+              }
+            });
         }
       });
     });

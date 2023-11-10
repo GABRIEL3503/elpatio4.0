@@ -288,7 +288,7 @@ button{
 }
 .swal2-popup {
   width: 34vh!important;
-  height: 49vh!important;
+  height: auto!important;
 }
 
 .swal2-title{
