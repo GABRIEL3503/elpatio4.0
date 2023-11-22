@@ -18,8 +18,8 @@ let menuVersion = 0; // O usa un timestamp inicial
 
 // Hardcoded user for demonstration purposes
 const hardcodedUser = {
-  username: "admin",
-  password: bcrypt.hashSync("1234", 8)  // Hashed password
+  username: "elpatio427",
+  password: bcrypt.hashSync("111820", 8)  // Hashed password
 };
 
 app.post('/api/auth/login', (req, res) => {
