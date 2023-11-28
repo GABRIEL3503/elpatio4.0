@@ -434,6 +434,7 @@ p{
   }
   
   .item-title {
+    margin-right: 222px;
     flex-grow: 1; /* Permite que el título ocupe todo el espacio disponible */
   }
   
