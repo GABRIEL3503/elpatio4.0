@@ -468,6 +468,6 @@ text-decoration: none;
     margin-right: 520px;
   }
 
-  div[data-type="SANDWICHES"] .menu-item:first-child .item-price {
+  div[data-type="SANDWICHES"] .menu-item:first-of-type .item-price {
     display: none;
   }
