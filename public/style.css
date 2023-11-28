@@ -467,3 +467,7 @@ text-decoration: none;
 
     margin-right: 520px;
   }
+
+  div[data-type="SANDWICHES"] .menu-item:first-child .item-price {
+    display: none;
+  }
