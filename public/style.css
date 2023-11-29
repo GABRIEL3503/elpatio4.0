@@ -467,6 +467,10 @@ text-decoration: none;
 
     margin-right: 475px;
   }
+  div[data-type="PIZZETAS"] .item-title {
+
+    margin-right: 475px;
+  }
 
   div[data-type="SANDWICHES"] .menu-item:first-of-type .item-price {
     display: none;
