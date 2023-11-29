@@ -100,7 +100,10 @@ function renderMenuItems(menuData) {
         menuSection.setAttribute('data-type', item.tipo);
 
         const itemTypeLower = item.tipo.toLowerCase();
-        const isSpecialDrink = itemTypeLower === 'cervezas' || itemTypeLower.includes('tipos de gin');
+        const isSpecialDrink = itemTypeLower === 'cervezas' || 
+        itemTypeLower.includes('estilos de gin') ||
+        itemTypeLower === 'bebidas sin alcohol' ||
+        itemTypeLower === 'tragos';
         const sectionClass = isSpecialDrink ? 'special-drink-title' : '';
 
         if (currentType !== item.tipo) {
@@ -188,9 +191,10 @@ function renderMenuItems(menuData) {
           '<option value="PARA COMPARTIR" ' + (itemType === 'PARA COMPARTIR' ? 'selected' : '') + '>PARA COMPARTIR</option>' +
           '<option value="SANDWICHES" ' + (itemType === 'SANDWICHES' ? 'selected' : '') + '>SANDWICHES</option>' +
           '<option value="PIZZETAS" ' + (itemType === 'PIZZETAS' ? 'selected' : '') + '>PIZZETAS</option>' +
-          '<option value="BEBIDAS" ' + (itemType === 'BEBIDAS' ? 'selected' : '') + '>BEBIDAS</option>' +
+          '<option value="BEBIDAS SIN ALCOHOL" ' + (itemType === '' ? 'selected' : '') + '>BEBIDAS SIN ALCOHOL</option>' +
           '<option value="CERVEZAS" ' + (itemType === 'CERVEZAS' ? 'selected' : '') + '>CERVEZAS</option>' +
-          '<option value="GIN" ' + (itemType === 'GIN' ? 'selected' : '') + '>GIN</option>' +
+          '<option value="ESTILOS DE GIN" ' + (itemType === 'GIN' ? 'selected' : '') + '> ESTILOS DE GIN</option>' +
+          '<option value="TRAGOS" ' + (itemType === 'TRAGOS' ? 'selected' : '') + '> TRAGOS</option>' +
           '</select>',
         showCancelButton: true,
         confirmButtonText: 'Actualizar',
@@ -283,9 +287,10 @@ function renderMenuItems(menuData) {
         '<option value="PIZZETAS">PIZZETAS</option>' +
         '<option value="PARA COMPARTIR">PARA COMPARTIR</option>' +
         '<option value="SANDWICHES">SANDWICHES</option>' +
-        '<option value="BEBIDAS">BEBIDAS</option>' +
+        '<option value=" SIN ALCOHOL">BEBIDAS SIN ALCOHOL</option>' +
         '<option value="CERVEZAS" >CERVEZAS</option>' +
-        '<option value="GIN">GIN</option>' +
+        '<option value="ESTILOS DE GIN">ESTILOS DE GIN</option>' +
+        '<option value="TRAGOS">TRAGOS</option>' +
 
         '</select>',
       focusConfirm: false,
