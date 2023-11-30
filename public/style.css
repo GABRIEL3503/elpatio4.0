@@ -470,7 +470,21 @@ text-decoration: none;
   div[data-type="PIZZETAS"] .item-title {
     margin-right: 475px;
   }
+  div[data-type="ESTILOS DE GIN"] .item-title {
+    margin-right: 475px;
+  }
+  div[data-type="CERVEZAS"] .item-title {
+    margin-right: 475px;
+  }
+  div[data-type="TRAGOS"] .item-title {
+    margin-right: 475px;
+  }
+  div[data-type="BEBIDAS SIN ALCOHOL"] .item-title {
+    margin-right: 475px;
+  }
 
   div[data-type="SANDWICHES"] .menu-item:first-of-type .item-price {
     display: none;
   }
+
+
