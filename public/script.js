@@ -349,52 +349,95 @@ function renderMenuItems(menuData) {
       }
     });
   });
-  // Añadir un evento click al botón "Crear Anuncio"
-  const createAnnouncementButton = document.getElementById('create-announcement-button');
-  if (createAnnouncementButton) {
-    createAnnouncementButton.addEventListener('click', function () {
-      // Abre el modal de SweetAlert2 para crear el anuncio
-      Swal.fire({
-        title: 'Crear Anuncio',
-        html: `
-          <input id="swal-image-url" class="swal2-input" placeholder="URL de la imagen">
-          <input id="swal-text" class="swal2-input" placeholder="Texto del anuncio">
-          <input id="swal-paragraph" class="swal2-input" placeholder="Párrafo del anuncio"> 
-         <span class="check">  <input type="checkbox" id="swal-state" class="swal2-checkbox"> Activo</span>
-        `,
-        focusConfirm: false,
-        preConfirm: () => {
-          return {
-            image_url: document.getElementById('swal-image-url').value,
-            text: document.getElementById('swal-text').value,
-            paragraph: document.getElementById('swal-paragraph').value,
-            state: document.getElementById('swal-state').checked
-          };
+// Añadir un evento click al botón "Crear Anuncio"
+const createAnnouncementButton = document.getElementById('create-announcement-button');
+if (createAnnouncementButton) {
+  createAnnouncementButton.addEventListener('click', function () {
+    fetch('/api/announcements') // Realiza la solicitud GET
+      .then(response => response.json())
+      .then(data => {
+        let modalTitle = 'Crear Anuncio';
+        let imageUrl = '';
+        let text = '';
+        let paragraph = '';
+        let stateChecked = '';
+
+        if (data.success && data.announcement) {
+          // Si hay un anuncio activo, carga los datos en el modal
+          modalTitle = 'Editar Anuncio';
+          imageUrl = data.announcement.image_url || '';
+          text = data.announcement.text || '';
+          paragraph = data.announcement.paragraph || '';
+          stateChecked = data.announcement.state ? 'checked' : '';
         }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Enviar los datos del anuncio al servidor
-          fetch('/api/announcements', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(result.value)
-          })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                // Anuncio creado o actualizado correctamente
-                console.log('Anuncio creado/actualizado con ID:', data.id);
-              } else {
-                // Manejo de errores
-                console.log('Error al crear/actualizar el anuncio:', data.error);
-              }
-            });
-        }
+
+        Swal.fire({
+          title: modalTitle,
+          html: `
+            <input id="swal-image-url" class="swal2-input" placeholder="URL de la imagen" value="${imageUrl}">
+            <input id="swal-text" class="swal2-input" placeholder="Texto del anuncio" value="${text}">
+            <input id="swal-paragraph" class="swal2-input" placeholder="Párrafo del anuncio" value="${paragraph}">
+            <span class="check"><input type="checkbox" id="swal-state" class="swal2-checkbox" ${stateChecked}> Activo</span>
+          `,
+          focusConfirm: false,
+          preConfirm: () => {
+            return {
+              image_url: document.getElementById('swal-image-url').value,
+              text: document.getElementById('swal-text').value,
+              paragraph: document.getElementById('swal-paragraph').value,
+              state: document.getElementById('swal-state').checked
+            };
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Enviar los datos del anuncio al servidor
+            fetch('/api/announcements', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(result.value)
+            })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  // Anuncio creado o actualizado correctamente
+                  console.log('Anuncio creado/actualizado con ID:', data.id);
+                } else {
+                  // Manejo de errores
+                  console.log('Error al crear/actualizar el anuncio:', data.error);
+                }
+              });
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Error al cargar el anuncio:', error);
+        // Aquí puedes manejar el error o abrir el modal con campos vacíos
+        Swal.fire({
+          title: 'Crear Anuncio',
+          html: `
+            <input id="swal-image-url" class="swal2-input" placeholder="URL de la imagen">
+            <input id="swal-text" class="swal2-input" placeholder="Texto del anuncio">
+            <input id="swal-paragraph" class="swal2-input" placeholder="Párrafo del anuncio">
+            <span class="check"><input type="checkbox" id="swal-state" class="swal2-checkbox"> Activo</span>
+          `,
+          focusConfirm: false,
+          preConfirm: () => {
+            return {
+              image_url: document.getElementById('swal-image-url').value,
+              text: document.getElementById('swal-text').value,
+              paragraph: document.getElementById('swal-paragraph').value,
+              state: document.getElementById('swal-state').checked
+            };
+          }
+        });
       });
-    });
-  }
+  });
+}
+
+
+
   function loadAndShowActiveAnnouncement() {
     fetch('/api/announcements')
       .then(response => response.json())
