@@ -317,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }).then((result) => {
       if (result.isConfirmed) {
         // result.value ya es un objeto FormData preparado en preConfirm
-        fetch('/api/menu', {
+        fetch('https://elpatio427.com.ar/api/menu', {
           method: 'POST',
           body: result.value  // result.value es el objeto FormData
         })
