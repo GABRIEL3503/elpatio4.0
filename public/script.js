@@ -424,7 +424,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   function loadAndShowActiveAnnouncement() {
-    console.log("Cargando anuncio activo...");
+    console.log("Cargando anuncio activo");
 
     fetch('/api/announcements')
       .then(response => {
