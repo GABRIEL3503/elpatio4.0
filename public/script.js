@@ -17,7 +17,7 @@ function checkAuthentication() {
 }
 document.addEventListener("DOMContentLoaded", function () {
   checkAuthentication();
-
+  loadAndShowActiveAnnouncement();
   // Añadir un evento click al botón "Iniciar Sesión"
   document.getElementById('login-button').addEventListener('click', function () {
     Swal.fire({
@@ -60,12 +60,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function loadMenuItems() {
     const localVersion = localStorage.getItem('menuVersion');
-  
-    return fetch('https://elpatio427.com.ar/api/menuVersion')
+
+    return fetch('http://localhost:3001/api/menuVersion')
       .then(response => response.json())
       .then(serverVersionData => {
         const serverVersion = serverVersionData.version;
-  
+
         if (localVersion !== serverVersion) {
           // Si la versión del servidor es diferente, obtén los datos del menú desde el servidor
           return fetchMenuDataFromServer();
@@ -75,19 +75,19 @@ document.addEventListener("DOMContentLoaded", function () {
           renderMenuItems(menuData);
         }
       }); // Cierre de then() para fetch('/api/menuVersion')
-} // Cierre de loadMenuItems()
+  } // Cierre de loadMenuItems()
 
-function fetchMenuDataFromServer() {
-    return fetch('https://elpatio427.com.ar/api/menu')
+  function fetchMenuDataFromServer() {
+    return fetch('http://localhost:3001/api/menu')
       .then(response => response.json())
       .then(data => {
         localStorage.setItem('menuData', JSON.stringify(data.data));
         localStorage.setItem('menuVersion', data.version); // Asume que el servidor envía una 'versión'
         renderMenuItems(data.data);
       }); // Cierre de then() para fetch('/api/menu')
-} // Cierre de fetchMenuDataFromServer()
+  } // Cierre de fetchMenuDataFromServer()
 
-function renderMenuItems(menuData) {
+  function renderMenuItems(menuData) {
     const container = document.querySelector('.container');
     let currentType = null;
 
@@ -100,10 +100,10 @@ function renderMenuItems(menuData) {
         menuSection.setAttribute('data-type', item.tipo);
 
         const itemTypeLower = item.tipo.toLowerCase();
-        const isSpecialDrink = itemTypeLower === 'cervezas' || 
-        itemTypeLower.includes('estilos de gin') ||
-        itemTypeLower === 'bebidas sin alcohol' ||
-        itemTypeLower === 'tragos';
+        const isSpecialDrink = itemTypeLower === 'cervezas' ||
+          itemTypeLower.includes('estilos de gin') ||
+          itemTypeLower === 'bebidas sin alcohol' ||
+          itemTypeLower === 'tragos';
         const sectionClass = isSpecialDrink ? 'special-drink-title' : '';
 
         if (currentType !== item.tipo) {
@@ -133,7 +133,7 @@ function renderMenuItems(menuData) {
     }); // Cierre de forEach
 
     checkAuthentication();
-} // Cierre de renderMenuItems()
+  } // Cierre de renderMenuItems()
 
 
 
@@ -172,61 +172,66 @@ function renderMenuItems(menuData) {
     if (event.target.classList.contains('edit-button')) {
       const itemElement = event.target.closest('.menu-item');
       const itemTitle = itemElement.querySelector('.item-title').textContent;
-      const itemPrice = itemElement.querySelector('.item-price').textContent.substring(1); // Eliminar el símbolo de dólar
-
-      console.log('Debug - Título del elemento:', itemTitle);
-      console.log('Debug - Precio del elemento:', itemPrice); const itemDescription = itemElement.querySelector('.item-description').textContent;
+      const itemPrice = itemElement.querySelector('.item-price').textContent.substring(1); // Elimina el símbolo del dólar
+      const itemDescription = itemElement.querySelector('.item-description').textContent;
       const itemType = event.target.closest('.menu-section').getAttribute('data-type');
       const imgElement = itemElement.querySelector('img');
       const itemImgUrl = imgElement ? imgElement.src : '';
       Swal.fire({
         title: 'Editar elemento',
         html:
-          '<input id="swal-input1" class="swal2-input" placeholder="Nombre" value="' + itemTitle + '">' +
-          '<input id="swal-input2" class="swal2-input" placeholder="Precio" value="' + itemPrice + '">' +
-          '<input id="swal-input4" class="swal2-input" placeholder="Descripción" value="' + itemDescription + '">' +
-          '<input id="swal-img-url" class="swal2-input" placeholder="URL de la imagen" value="' + itemImgUrl + '">' +
+          '<input id="swal-input1" class="swal2-input" placeholder="Nombre" value=\'' + itemTitle + '\'/>' +
+          '<input id="swal-input2" class="swal2-input" placeholder="Precio" value=\'' + itemPrice + '\'/>' +
+          '<input id="swal-input4" class="swal2-input" placeholder="Descripción" value=\'' + itemDescription + '\'/>' +
+          '<div id="image-preview-container">' +
+          '<label for="swal-file-upload"></label>' + // Etiqueta para la carga de la imagen
+          '<img id="current-image-preview" src=\'' + itemImgUrl + '\' style="max-width:300px;" onerror="this.style.display=\'none\'"/>' + // Miniatura de la imagen actual
+          '</div>' +
+          '<input type="file" id="swal-file-upload" class="swal2-input"/>' +
           '<select id="swal-input3" class="swal2-input">' +
-          '<option value="ENTRADAS" ' + (itemType === 'ENTRADAS' ? 'selected' : '') + '>ENTRADAS</option>' +
-          '<option value="PARA COMPARTIR" ' + (itemType === 'PARA COMPARTIR' ? 'selected' : '') + '>PARA COMPARTIR</option>' +
-          '<option value="SANDWICHES" ' + (itemType === 'SANDWICHES' ? 'selected' : '') + '>SANDWICHES</option>' +
-          '<option value="PIZZETAS" ' + (itemType === 'PIZZETAS' ? 'selected' : '') + '>PIZZETAS</option>' +
-          '<option value="BEBIDAS SIN ALCOHOL" ' + (itemType === '' ? 'selected' : '') + '>BEBIDAS SIN ALCOHOL</option>' +
-          '<option value="CERVEZAS" ' + (itemType === 'CERVEZAS' ? 'selected' : '') + '>CERVEZAS</option>' +
-          '<option value="ESTILOS DE GIN" ' + (itemType === 'GIN' ? 'selected' : '') + '> ESTILOS DE GIN</option>' +
-          '<option value="TRAGOS" ' + (itemType === 'TRAGOS' ? 'selected' : '') + '> TRAGOS</option>' +
+          '<option value="ENTRADAS"' + (itemType === 'ENTRADAS' ? ' selected' : '') + '>ENTRADAS</option>' +
+          '<option value="PARA COMPARTIR"' + (itemType === 'PARA COMPARTIR' ? ' selected' : '') + '>PARA COMPARTIR</option>' +
+          '<option value="SANDWICHES"' + (itemType === 'SANDWICHES' ? ' selected' : '') + '>SANDWICHES</option>' +
+          '<option value="PIZZETAS"' + (itemType === 'PIZZETAS' ? ' selected' : '') + '>PIZZETAS</option>' +
+          '<option value="BEBIDAS SIN ALCOHOL"' + (itemType === '' ? ' selected' : '') + '>BEBIDAS SIN ALCOHOL</option>' +
+          '<option value="CERVEZAS"' + (itemType === 'CERVEZAS' ? ' selected' : '') + '>CERVEZAS</option>' +
+          '<option value="ESTILOS DE GIN"' + (itemType === 'GIN' ? ' selected' : '') + '>ESTILOS DE GIN</option>' +
+          '<option value="TRAGOS"' + (itemType === 'TRAGOS' ? ' selected' : '') + '>TRAGOS</option>' +
           '</select>',
+
         showCancelButton: true,
         confirmButtonText: 'Actualizar',
         cancelButtonText: 'Eliminar'
       }).then((result) => {
-        const updatedData = {
-          nombre: document.getElementById('swal-input1').value,
-          precio: document.getElementById('swal-input2').value,
-          descripcion: document.getElementById('swal-input4').value,
-          tipo: document.getElementById('swal-input3').value,
-          img_url: document.getElementById('swal-img-url').value
-        };
-
-
         if (result.isConfirmed) {
-          console.log("ID del elemento a editar:", itemElement.dataset.id);
-          fetch(`/api/menu/${itemElement.dataset.id}`, {
+          // Crear un objeto FormData y agregar los campos
+          const formData = new FormData();
+          formData.append('nombre', document.getElementById('swal-input1').value);
+          formData.append('precio', document.getElementById('swal-input2').value);
+          formData.append('descripcion', document.getElementById('swal-input4').value);
+          formData.append('tipo', document.getElementById('swal-input3').value);
+
+          // Agregar la imagen solo si se seleccionó un archivo
+          const fileInput = document.getElementById('swal-file-upload');
+          if (fileInput.files[0]) {
+            formData.append('imagen', fileInput.files[0]); // Solo añade si se selecciona una nueva imagen
+          }
+
+          const itemId = itemElement.dataset.id; // Asegúrate de capturar el ID del elemento correctamente
+          // Realizar la solicitud fetch con PUT y FormData
+          fetch(`/api/menu/${itemId}`, {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedData)
-          }).then(response => response.json())
+            body: formData  // Usar FormData como cuerpo de la solicitud
+          })
+            .then(response => response.json())
             .then(data => {
               if (data.changes > 0) {
                 // El elemento se actualizó correctamente
                 console.log('Elemento actualizado');
                 // Actualizar el elemento en el frontend
-                itemElement.querySelector('.item-title').textContent = updatedData.nombre;
-                itemElement.querySelector('.item-price').textContent = `$${updatedData.precio}`;
-                itemElement.querySelector('.item-description').textContent = updatedData.descripcion;
-
+                itemElement.querySelector('.item-title').textContent = data.nombre || itemTitle;  // Utiliza el valor actualizado o el anterior si no se encuentra
+                itemElement.querySelector('.item-price').textContent = `$${data.precio || itemPrice}`;
+                itemElement.querySelector('.item-description').textContent = data.descripcion || itemDescription;
 
                 let imgElement = itemElement.querySelector('img');
                 if (updatedData.img_url) { // Si hay una nueva URL
@@ -249,6 +254,7 @@ function renderMenuItems(menuData) {
                   newMenuSection.appendChild(itemElement);
                 }
               }
+              const updatedData = data;
             });
 
         } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -281,7 +287,7 @@ function renderMenuItems(menuData) {
         '<input id="swal-input1" class="swal2-input" placeholder="Nombre">' +
         '<input id="swal-input2" class="swal2-input" placeholder="Precio">' +
         '<input id="swal-input4" class="swal2-input" placeholder="Descripción">' +
-        '<input id="swal-img-url" class="swal2-input" placeholder="URL de la imagen">' +
+        '<input type="file" id="swal-file-upload" class="swal2-input"> <!-- Campo de tipo file -->' +
         '<select id="swal-input3" class="swal2-input">' +
         '<option value="ENTRADAS">ENTRADAS</option>' +
         '<option value="PIZZETAS">PIZZETAS</option>' +
@@ -295,171 +301,170 @@ function renderMenuItems(menuData) {
         '</select>',
       focusConfirm: false,
       preConfirm: () => {
-        return {
-          nombre: document.getElementById('swal-input1').value,
-          precio: document.getElementById('swal-input2').value,
-          descripcion: document.getElementById('swal-input4').value,
-          tipo: document.getElementById('swal-input3').value,
-          img_url: document.getElementById('swal-img-url').value
+        const formData = new FormData();
+        formData.append('nombre', document.getElementById('swal-input1').value);
+        formData.append('precio', document.getElementById('swal-input2').value);
+        formData.append('descripcion', document.getElementById('swal-input4').value);
+        formData.append('tipo', document.getElementById('swal-input3').value);
 
+        const fileInput = document.getElementById('swal-file-upload');
+        if (fileInput.files[0]) {
+          formData.append('imagen', fileInput.files[0]);
         }
+
+        return formData; // Retorna el FormData para ser usado en el then
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        const newData = {
-          nombre: document.getElementById('swal-input1').value,
-          precio: document.getElementById('swal-input2').value,
-          descripcion: document.getElementById('swal-input4').value,
-          tipo: document.getElementById('swal-input3').value,
-          img_url: document.getElementById('swal-img-url').value
-
-        };
-
-        // Crear el nuevo elemento en el servidor
-        fetch('https://elpatio427.com.ar/api/menu', {
+        // result.value ya es un objeto FormData preparado en preConfirm
+        fetch('/api/menu', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(newData)
-        }).then(response => response.json())
+          body: result.value  // result.value es el objeto FormData
+        })
+          .then(response => response.json())
           .then(data => {
             if (data.id) {
-              // El elemento se creó correctamente
               console.log('Elemento creado con ID:', data.id);
 
               // Verificar si la sección del menú ya existe
-              let menuSection = document.querySelector(`.menu-section[data-type="${newData.tipo}"]`);
-
-              // Si no existe, crearla
+              let menuSection = document.querySelector(`.menu-section[data-type="${data.tipo}"]`);
               if (!menuSection) {
                 menuSection = document.createElement('div');
                 menuSection.className = 'menu-section';
-                menuSection.setAttribute('data-type', newData.tipo);
-                // Aquí puedes añadir más elementos al menuSection si es necesario
-                document.body.appendChild(menuSection);  // Añadir al lugar apropiado en el DOM
+                menuSection.setAttribute('data-type', data.tipo);
+                document.body.appendChild(menuSection);
               }
 
-              const newItem = createMenuItem(newData);
+              // Crea un nuevo elemento de menú en el DOM usando los datos recibidos del servidor
+              const newItem = createMenuItem(data);
               menuSection.appendChild(newItem);
             }
           })
-
-
+          .catch(err => {
+            console.error('Error al crear elemento:', err);
+          });
       }
+    }); // Este cierra correctamente el bloque then
+  })
+
+
+
+
+  const createAnnouncementButton = document.getElementById('create-announcement-button');
+  if (createAnnouncementButton) {
+
+    createAnnouncementButton.addEventListener('click', function () {
+      fetch('/api/announcements') // Sigue realizando la solicitud GET
+        .then(response => response.json())
+        .then(data => {
+          let modalTitle = 'Crear Anuncio';
+          let text = '';
+          let paragraph = '';
+          let stateChecked = '';
+          let imageUrl = '';  // URL de la imagen del anuncio
+
+
+          if (data.success && data.announcement) {
+            // Si hay un anuncio activo, carga los datos en el modal
+            modalTitle = 'Editar Anuncio';
+            text = data.announcement.text || '';
+            paragraph = data.announcement.paragraph || '';
+            stateChecked = data.announcement.state ? 'checked' : '';
+            imageUrl = data.announcement.image_url || '';  // Asegúrate de obtener la URL de la imagen correctamente
+
+          }
+
+          Swal.fire({
+            title: modalTitle,
+            html: `
+          <img src="${imageUrl}" alt="Imagen Actual" id="current-image-preview" style="max-width:300px;" onerror="this.style.display='none'"/> <!-- Muestra la imagen actual -->
+          <input type="file" id="swal-image-upload" class="swal2-input"> <!-- Para cargar una nueva imagen -->
+          <input id="swal-text" class="swal2-input" placeholder="Texto del anuncio" value="${text}">
+          <input id="swal-paragraph" class="swal2-input" placeholder="Párrafo del anuncio" value="${paragraph}">
+          <span class="check"><input type="checkbox" id="swal-state" class="swal2-checkbox" ${stateChecked}> Activo</span>
+          `,
+            focusConfirm: false,
+            preConfirm: () => {
+              const formData = new FormData();
+           
+              formData.append('text', document.getElementById('swal-text').value);
+              formData.append('paragraph', document.getElementById('swal-paragraph').value);
+              formData.append('state', document.getElementById('swal-state').checked);
+              const fileInput = document.getElementById('swal-image-upload');
+              if (fileInput && fileInput.files.length > 0) {
+                formData.append('image', fileInput.files[0]);
+            }
+              return formData; // Retorna el FormData para ser usado en el then
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Enviar los datos del anuncio al servidor como FormData
+              fetch('/api/announcements', {
+                method: 'POST',
+                body: result.value  // Envia el objeto FormData
+              })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    // Anuncio creado o actualizado correctamente
+                    console.log('Anuncio creado/actualizado con ID:', data.id);
+                  } else {
+                    // Manejo de errores
+                    console.log('Error al crear/actualizar el anuncio:', data.error);
+                  }
+                });
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error al cargar el anuncio:', error);
+        });
     });
-  });
-// Añadir un evento click al botón "Crear Anuncio"
-const createAnnouncementButton = document.getElementById('create-announcement-button');
-if (createAnnouncementButton) {
-  createAnnouncementButton.addEventListener('click', function () {
-    fetch('/api/announcements') // Realiza la solicitud GET
-      .then(response => response.json())
-      .then(data => {
-        let modalTitle = 'Crear Anuncio';
-        let imageUrl = '';
-        let text = '';
-        let paragraph = '';
-        let stateChecked = '';
-
-        if (data.success && data.announcement) {
-          // Si hay un anuncio activo, carga los datos en el modal
-          modalTitle = 'Editar Anuncio';
-          imageUrl = data.announcement.image_url || '';
-          text = data.announcement.text || '';
-          paragraph = data.announcement.paragraph || '';
-          stateChecked = data.announcement.state ? 'checked' : '';
-        }
-
-        Swal.fire({
-          title: modalTitle,
-          html: `
-            <input id="swal-image-url" class="swal2-input" placeholder="URL de la imagen" value="${imageUrl}">
-            <input id="swal-text" class="swal2-input" placeholder="Texto del anuncio" value="${text}">
-            <input id="swal-paragraph" class="swal2-input" placeholder="Párrafo del anuncio" value="${paragraph}">
-            <span class="check"><input type="checkbox" id="swal-state" class="swal2-checkbox" ${stateChecked}> Activo</span>
-          `,
-          focusConfirm: false,
-          preConfirm: () => {
-            return {
-              image_url: document.getElementById('swal-image-url').value,
-              text: document.getElementById('swal-text').value,
-              paragraph: document.getElementById('swal-paragraph').value,
-              state: document.getElementById('swal-state').checked
-            };
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Enviar los datos del anuncio al servidor
-            fetch('/api/announcements', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(result.value)
-            })
-              .then(response => response.json())
-              .then(data => {
-                if (data.success) {
-                  // Anuncio creado o actualizado correctamente
-                  console.log('Anuncio creado/actualizado con ID:', data.id);
-                } else {
-                  // Manejo de errores
-                  console.log('Error al crear/actualizar el anuncio:', data.error);
-                }
-              });
-          }
-        });
-      })
-      .catch(error => {
-        console.error('Error al cargar el anuncio:', error);
-        // Aquí puedes manejar el error o abrir el modal con campos vacíos
-        Swal.fire({
-          title: 'Crear Anuncio',
-          html: `
-            <input id="swal-image-url" class="swal2-input" placeholder="URL de la imagen">
-            <input id="swal-text" class="swal2-input" placeholder="Texto del anuncio">
-            <input id="swal-paragraph" class="swal2-input" placeholder="Párrafo del anuncio">
-            <span class="check"><input type="checkbox" id="swal-state" class="swal2-checkbox"> Activo</span>
-          `,
-          focusConfirm: false,
-          preConfirm: () => {
-            return {
-              image_url: document.getElementById('swal-image-url').value,
-              text: document.getElementById('swal-text').value,
-              paragraph: document.getElementById('swal-paragraph').value,
-              state: document.getElementById('swal-state').checked
-            };
-          }
-        });
-      });
-  });
-}
-
+  }
 
 
   function loadAndShowActiveAnnouncement() {
+    console.log("Cargando anuncio activo...");
+
     fetch('/api/announcements')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`); // Lanza un error si la respuesta no es exitosa
+        }
+        return response.json(); // Parsea la respuesta como JSON
+      })
       .then(data => {
+        console.log("Datos recibidos para el anuncio activo:", data);
+
         if (data.success && data.announcement && data.announcement.state) {
-          // Mostrar el anuncio con SweetAlert2
           Swal.fire({
             title: data.announcement.text,
-            html: `<p>${data.announcement.paragraph}</p>`, // Añade el párrafo del anuncio aquí
+            html: `<p>${data.announcement.paragraph}</p>`,
             imageUrl: data.announcement.image_url,
             imageWidth: 400,
             imageHeight: 200,
             imageAlt: 'Imagen del anuncio',
             confirmButtonText: 'OK'
           });
+        } else {
+          console.log("No hay anuncio activo o el anuncio no está en estado activo.");
         }
+      })
+      .catch(error => {
+        // Maneja cualquier error que ocurra durante la solicitud o procesamiento de datos
+        console.error("Error al cargar el anuncio:", error);
+        // Aquí podrías mostrar un mensaje al usuario o realizar alguna acción de recuperación
       });
   }
 
+
+
   // Cargar y mostrar el anuncio activo al iniciar la aplicación
-  loadAndShowActiveAnnouncement();
+
 });
+
+
+
 // Función para cerrar la sesión
 function simpleLogout() {
   localStorage.removeItem('jwt');  // Elimina el token JWT del almacenamiento local
