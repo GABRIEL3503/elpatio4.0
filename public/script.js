@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function loadMenuItems() {
     const localVersion = localStorage.getItem('menuVersion');
 
-    return fetch('http://localhost:3001/api/menuVersion')
+    return fetch('https://elpatio427.com.ar/api/menuVersion')
       .then(response => response.json())
       .then(serverVersionData => {
         const serverVersion = serverVersionData.version;
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
   } // Cierre de loadMenuItems()
 
   function fetchMenuDataFromServer() {
-    return fetch('http://localhost:3001/api/menu')
+    return fetch('https://elpatio427.com.ar/api/menu')
       .then(response => response.json())
       .then(data => {
         localStorage.setItem('menuData', JSON.stringify(data.data));
