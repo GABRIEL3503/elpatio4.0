@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function loadMenuItems() {
     const localVersion = localStorage.getItem('menuVersion');
-
+    // return fetch('http://localhost:3001/api/menuVersion')
     return fetch('https://elpatio427.com.ar/api/menuVersion')
       .then(response => response.json())
       .then(serverVersionData => {
@@ -76,8 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }); // Cierre de then() para fetch('/api/menuVersion')
   } // Cierre de loadMenuItems()
-
+ 
   function fetchMenuDataFromServer() {
+    // return fetch(' http://localhost:3001/api/menu')
     return fetch('https://elpatio427.com.ar/api/menu')
       .then(response => response.json())
       .then(data => {
@@ -179,6 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const itemImgUrl = imgElement ? imgElement.src : '';
       Swal.fire({
         title: 'Editar elemento',
+        showCloseButton: true, 
         html:
           '<input id="swal-input1" class="swal2-input" placeholder="Nombre" value=\'' + itemTitle + '\'/>' +
           '<input id="swal-input2" class="swal2-input" placeholder="Precio" value=\'' + itemPrice + '\'/>' +
@@ -216,10 +218,12 @@ document.addEventListener("DOMContentLoaded", function () {
           if (fileInput.files[0]) {
             formData.append('imagen', fileInput.files[0]); // Solo añade si se selecciona una nueva imagen
           }
+      
 
           const itemId = itemElement.dataset.id; // Asegúrate de capturar el ID del elemento correctamente
           // Realizar la solicitud fetch con PUT y FormData
-          fetch(`/api/menu/${itemId}`, {
+          // fetch(`http://localhost:3001/api/menu/${itemId}`, {
+          fetch(`https://elpatio427.com.ar/api/menu/${itemId}`, {
             method: 'PUT',
             body: formData  // Usar FormData como cuerpo de la solicitud
           })
@@ -318,6 +322,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (result.isConfirmed) {
         // result.value ya es un objeto FormData preparado en preConfirm
         fetch('https://elpatio427.com.ar/api/menu', {
+          // fetch('http://localhost:3001/api/menu', {
           method: 'POST',
           body: result.value  // result.value es el objeto FormData
         })
@@ -376,6 +381,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
           Swal.fire({
             title: modalTitle,
+            showCloseButton: true, 
+
             html: `
           <img src="${imageUrl}" alt="Imagen Actual" id="current-image-preview" style="max-width:300px;" onerror="this.style.display='none'"/> <!-- Muestra la imagen actual -->
           <input type="file" id="swal-image-upload" class="swal2-input"> <!-- Para cargar una nueva imagen -->

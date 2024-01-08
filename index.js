@@ -226,15 +226,35 @@ console.log("Req.file details:", req.file); // Detalles del archivo
         let params;
 
         if (row) { 
-// Cuando actualizas un anuncio existente:
-const currentImageUrl = hasNewImage ? newImageUrl : row.image_url;
-          query = 'UPDATE announcements SET image_url = ?, text = ?, paragraph = ?, state = ? WHERE id = 1';
-          params = [currentImageUrl, text, paragraph, state];
-      } else { // Crear un nuevo anuncio
-          query = 'INSERT INTO announcements (image_url, text, paragraph, state) VALUES (?, ?, ?, ?)';
-          // Nota: como es un nuevo anuncio, si no hay imagen nueva, se establecerá como vacío
-          params = [newImageUrl, text, paragraph, state];
+             // Si hay una imagen existente y una nueva, elimina la antigua
+      if (row.image_url && req.file) {
+        const oldImagePath = path.join(__dirname, 'public', row.image_url);
+        fs.unlink(oldImagePath, err => {
+            if (err) console.error("Error al eliminar la imagen antigua:", err);
+            else console.log("Imagen antigua eliminada con éxito");
+        });
       }
+ // Cuando actualizas un anuncio existente:
+    // Cuando actualizas un anuncio existente:
+    const currentImageUrl = req.file ? `/img/${req.file.filename}` : row.image_url;
+    query = 'UPDATE announcements SET image_url = ?, text = ?, paragraph = ?, state = ? WHERE id = 1';
+    params = [currentImageUrl, text, paragraph, state];
+
+    // Si estás actualizando el anuncio para desactivarlo, también elimina la imagen
+    if(state === 'false' || state === 'inactive') {
+        const imagePathToDelete = row.image_url;
+        const fullPath = path.join(__dirname, 'public', imagePathToDelete);
+        fs.unlink(fullPath, err => {
+            if (err) console.error("Error al eliminar la imagen del anuncio inactivo:", err);
+            else console.log("Imagen de anuncio inactivo eliminada con éxito");
+        });
+    }
+} else { 
+    // Crear un nuevo anuncio
+    query = 'INSERT INTO announcements (image_url, text, paragraph, state) VALUES (?, ?, ?, ?)';
+    params = [newImageUrl, text, paragraph, state];
+}
+
 
         // Ejecutar la creación o actualización
         db.run(query, params, function(err) {
