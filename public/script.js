@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           // Eliminar el elemento
-          fetch(`/api/menu/${itemElement.dataset.id}`, {
+          fetch(`https://elpatio427.com.ar/api/menu/${itemElement.dataset.id}`, {
             method: 'DELETE'
           }).then(response => response.json())
             .then(data => {
